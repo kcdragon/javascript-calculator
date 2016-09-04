@@ -86,44 +86,29 @@ class ExpressionBuilder {
     }
 
     buildExpression() {
-        var builder = this
-        var stack = new Stack()
-        this.tokens.forEach(function (token) {
-            if (builder.tokenIsOperator(token)) {
-                stack.push(token)
-            }
-            else {
-                if (stack.peek() instanceof Expression) {
-                    var left = stack.pop()
-                    var right = new Number(token)
-                    var operator = stack.pop()
-                    stack.push(
-                        builder.getNewOperator(operator, left, right)
-                    )
-                }
-                else {
-                    stack.push(new Number(token));
-                }
-            }
-        })
-
-        while (stack.size() > 1) {
-            var right = stack.pop()
-            var left = stack.pop()
-            var operator = stack.pop()
-            stack.push(
-                this.getNewOperator(operator, left, right)
-            )
-        }
-
-        return stack.pop()
+        return this._parse(this.tokens)
     }
 
-    tokenIsOperator(token) {
+    _parse(tokens) {
+        var token = null
+        while (token = tokens.shift()) {
+            if (this._tokenIsOperator(token)) {
+                var operator = token
+                var left = this._parse(tokens)
+                var right = this._parse(tokens)
+                return this._getNewOperator(operator, left, right)
+            }
+            else {
+                return new Number(token)
+            }
+        }
+    }
+
+    _tokenIsOperator(token) {
         return token.toString().match(/^[\+\-*\/]$/)
     }
 
-    getNewOperator(token, left, right) {
+    _getNewOperator(token, left, right) {
         if (token == "+")
             return new Plus(left, right)
         else if (token == "-")

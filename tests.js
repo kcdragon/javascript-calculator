@@ -58,6 +58,43 @@ QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 2", fu
     )
 });
 
+QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 2 and depth 3", function(assert) {
+    assert.ok(
+        _.isEqual(
+            new Plus(
+                new Plus(
+                    new Plus(new Number(1), new Number(2)),
+                    new Number(3)
+                ),
+                new Plus(
+                    new Number(4),
+                    new Plus(new Number(5), new Number(6))
+                )
+            ),
+            new ExpressionBuilder(["+", "+", "+", 1, 2, 3, "+", 4, "+", 5, 6]).buildExpression()
+        )
+    )
+});
+
+QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 3", function(assert) {
+    assert.ok(
+        _.isEqual(
+            new Plus(
+                new Plus(
+                    new Plus(new Number(1), new Number(2)),
+                    new Plus(new Number(3), new Number(4))
+                ),
+                new Plus(
+                    new Plus(new Number(5), new Number(6)),
+                    new Plus(new Number(7), new Number(8))
+                )
+            ),
+            new ExpressionBuilder(["+", "+", "+", 1, 2, "+", 3, 4, "+", "+", 5, 6, "+", 7, 8]).buildExpression()
+        ),
+        JSON.stringify(new ExpressionBuilder(["+", "+", "+", 1, 2, "+", 3, 4, "+", "+", 5, 6, "+", 7, 8]).buildExpression())
+    )
+});
+
 QUnit.test("Number#calculate returns value of number", function(assert) {
     assert.ok(
         new Number(1).calculate() === 1
