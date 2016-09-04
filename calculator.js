@@ -1,4 +1,8 @@
-class Expression {}
+class Expression {
+    calculate() {
+        throw(this.constructor.name + " has not implemented calculate()")
+    }
+}
 class Operator extends Expression {
     constructor(leftExpression, rightExpression) {
         super();
@@ -11,11 +15,31 @@ class Number extends Expression {
         super();
         this.number = number
     }
+
+    calculate() {
+        return this.number
+    }
 }
-class Plus extends Operator {}
-class Minus extends Operator {}
-class Times extends Operator {}
-class Divide extends Operator {}
+class Plus extends Operator {
+    calculate() {
+        return this.leftExpression.calculate() + this.rightExpression.calculate()
+    }
+}
+class Minus extends Operator {
+    calculate() {
+        return this.leftExpression.calculate() - this.rightExpression.calculate()
+    }
+}
+class Times extends Operator {
+    calculate() {
+        return this.leftExpression.calculate() * this.rightExpression.calculate()
+    }
+}
+class Divide extends Operator {
+    calculate() {
+        return this.leftExpression.calculate() / this.rightExpression.calculate()
+    }
+}
 
 class Stack {
     constructor() {
@@ -32,6 +56,10 @@ class Stack {
 
     peek() {
         return this.elements[this.elements.length - 1]
+    }
+
+    size() {
+        return this.elements.length
     }
 }
 
@@ -78,6 +106,16 @@ class ExpressionBuilder {
                 }
             }
         })
+
+        while (stack.size() > 1) {
+            var right = stack.pop()
+            var left = stack.pop()
+            var operator = stack.pop()
+            stack.push(
+                this.getNewOperator(operator, left, right)
+            )
+        }
+
         return stack.pop()
     }
 
