@@ -5,14 +5,14 @@ class Expression {
 }
 class Operator extends Expression {
     constructor(leftExpression, rightExpression) {
-        super();
+        super()
         this.leftExpression = leftExpression
         this.rightExpression = rightExpression
     }
 }
 class Number extends Expression {
     constructor(number) {
-        super();
+        super()
         this.number = number
     }
 
@@ -41,29 +41,7 @@ class Divide extends Operator {
     }
 }
 
-class Stack {
-    constructor() {
-        this.elements = []
-    }
-
-    push(element) {
-        this.elements.push(element)
-    }
-
-    pop() {
-        return this.elements.pop()
-    }
-
-    peek() {
-        return this.elements[this.elements.length - 1]
-    }
-
-    size() {
-        return this.elements.length
-    }
-}
-
-class Tokenizer {
+class Lexer {
     constructor(expressionString) {
         this.expressionString = expressionString
     }
@@ -80,7 +58,7 @@ class Tokenizer {
     }
 }
 
-class ExpressionBuilder {
+class Parser {
     constructor(tokens) {
         this.tokens = tokens
     }
@@ -109,28 +87,27 @@ class ExpressionBuilder {
     }
 
     _getNewOperator(token, left, right) {
-        if (token == "+")
+        if (token == "+") {
             return new Plus(left, right)
-        else if (token == "-")
+        }
+        else if (token == "-") {
             return new Minus(left, right)
-        else if (token == "*")
+        }
+        else if (token == "*") {
             return new Times(left, right)
-        else
+        }
+        else {
             return new Divide(left, right)
+        }
     }
 }
 
 $(document).ready(function () {
     $('.run-button').click(function () {
-        // var expressionString = $('.expression-input').val();
+        var expressionString = $('.expression-input').val(),
+            tokens = new Lexer(expressionString).tokens(),
+            expression = new Parser(tokens).buildExpression()
 
-        // var tokens = tokenize(expressionString)
-
-        // var expression = new Plus(
-        //     new Number(1),
-        //     new Number(1)
-        // )
-
-        // $('.result').text(expression.toString())
-    });
-});
+        $('.result').text(expression.calculate())
+    })
+})

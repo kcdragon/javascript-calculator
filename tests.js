@@ -1,64 +1,64 @@
-QUnit.test("Tokenizer#token + 1 1", function(assert) {
+QUnit.test("Lexer#token + 1 1", function(assert) {
     assert.ok(
-        _.isEqual(["+", 1, 1], new Tokenizer("+ 1 1").tokens())
+        _.isEqual(["+", 1, 1], new Lexer("+ 1 1").tokens())
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression single integer", function(assert) {
+QUnit.test("Parser#buildExpression single integer", function(assert) {
     assert.ok(
         _.isEqual(
             new Number(1),
-            new ExpressionBuilder([1]).buildExpression()
+            new Parser([1]).buildExpression()
         )
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression single plus expression", function(assert) {
+QUnit.test("Parser#buildExpression single plus expression", function(assert) {
     assert.ok(
         _.isEqual(
             new Plus(new Number(1), new Number(2)),
-            new ExpressionBuilder(["+", 1, 2]).buildExpression()
+            new Parser(["+", 1, 2]).buildExpression()
         )
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression single minus expression", function(assert) {
+QUnit.test("Parser#buildExpression single minus expression", function(assert) {
     assert.ok(
         _.isEqual(
             new Minus(new Number(1), new Number(2)),
-            new ExpressionBuilder(["-", 1, 2]).buildExpression()
+            new Parser(["-", 1, 2]).buildExpression()
         )
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression single times expression", function(assert) {
+QUnit.test("Parser#buildExpression single times expression", function(assert) {
     assert.ok(
         _.isEqual(
             new Times(new Number(1), new Number(2)),
-            new ExpressionBuilder(["*", 1, 2]).buildExpression()
+            new Parser(["*", 1, 2]).buildExpression()
         )
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression single divide expression", function(assert) {
+QUnit.test("Parser#buildExpression single divide expression", function(assert) {
     assert.ok(
         _.isEqual(
             new Divide(new Number(1), new Number(2)),
-            new ExpressionBuilder(["/", 1, 2]).buildExpression()
+            new Parser(["/", 1, 2]).buildExpression()
         )
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 2", function(assert) {
+QUnit.test("Parser#buildExpression nested expression with depth 2", function(assert) {
     assert.ok(
         _.isEqual(
             new Plus(new Plus(new Number(1), new Number(2)), new Plus(new Number(3), new Number(4))),
-            new ExpressionBuilder(["+", "+", 1, 2, "+", 3, 4]).buildExpression()
+            new Parser(["+", "+", 1, 2, "+", 3, 4]).buildExpression()
         )
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 2 and depth 3", function(assert) {
+QUnit.test("Parser#buildExpression nested expression with depth 2 and depth 3", function(assert) {
     assert.ok(
         _.isEqual(
             new Plus(
@@ -71,12 +71,12 @@ QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 2 and 
                     new Plus(new Number(5), new Number(6))
                 )
             ),
-            new ExpressionBuilder(["+", "+", "+", 1, 2, 3, "+", 4, "+", 5, 6]).buildExpression()
+            new Parser(["+", "+", "+", 1, 2, 3, "+", 4, "+", 5, 6]).buildExpression()
         )
     )
 });
 
-QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 3", function(assert) {
+QUnit.test("Parser#buildExpression nested expression with depth 3", function(assert) {
     assert.ok(
         _.isEqual(
             new Plus(
@@ -89,9 +89,8 @@ QUnit.test("ExpressionBuiler#buildExpression nested expression with depth 3", fu
                     new Plus(new Number(7), new Number(8))
                 )
             ),
-            new ExpressionBuilder(["+", "+", "+", 1, 2, "+", 3, 4, "+", "+", 5, 6, "+", 7, 8]).buildExpression()
-        ),
-        JSON.stringify(new ExpressionBuilder(["+", "+", "+", 1, 2, "+", 3, 4, "+", "+", 5, 6, "+", 7, 8]).buildExpression())
+            new Parser(["+", "+", "+", 1, 2, "+", 3, 4, "+", "+", 5, 6, "+", 7, 8]).buildExpression()
+        )
     )
 });
 
